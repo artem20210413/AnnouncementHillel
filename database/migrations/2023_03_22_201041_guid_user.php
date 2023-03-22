@@ -11,12 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user', function ($table) {
+        Schema::create('guidUsers', function ($table) {
             $table->id();
-            $table->string('name', 100);
-            $table->string('email', 100)->unique();
-            $table->string('password',100);
+            $table->string('guid',100)->unique();
+            $table->unsignedBigInteger('userId');
+            $table->tinyInteger('active')->default(1);
             $table->timestamps();
+
+            $table->foreign('userId')
+                ->references('id')
+                ->on('user')
+                ->onDelete('restrict');
         });
     }
 

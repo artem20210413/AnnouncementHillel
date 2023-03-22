@@ -21,6 +21,8 @@ Route::group(['middleware' => 'guest'], function () {
     Route::post('/login', [AuthController::class, 'handleLogin']);
     Route::get('/restore', [AuthController::class, 'showRestore'])->name('restore');
     Route::post('/restore', [AuthController::class, 'handleRestore']);
+    Route::get('/restore/{guid}', [AuthController::class, 'restoreCheckGuid']);
+    Route::post('/change-password', [AuthController::class, 'changePassword']);
     Route::get('/registration ', [AuthController::class, 'showRegistration'])->name('registration');
     Route::post('/registration', [AuthController::class, 'handleRegistration']);
 });

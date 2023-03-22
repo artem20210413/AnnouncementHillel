@@ -37,7 +37,7 @@ class MailgunMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.restore',
+            view: 'pages.emails.restore',
         );
     }
 

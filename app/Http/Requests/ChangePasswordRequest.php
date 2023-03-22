@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use function Symfony\Component\Translation\t;
 
-class RestoreRequest extends FormRequest
+class ChangePasswordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -12,7 +13,6 @@ class RestoreRequest extends FormRequest
     public function authorize(): bool
     {
         return true;
-//        return Auth::check();
     }
 
     /**
@@ -23,7 +23,8 @@ class RestoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email', //|exists:user,email
+            'id' => 'required|integer|exists:user,id',
+            'password' => 'required|min:8|max:255',
         ];
     }
 }

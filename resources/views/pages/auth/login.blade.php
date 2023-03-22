@@ -17,6 +17,20 @@
                 </ul>
             </div>
             @enderror
+            @if(session('message'))
+                <div class="alert alert-success">
+                    <ul>
+                        <li>{{session('message')}}</li>
+                    </ul>
+                </div>
+            @endif
+            @if(session('error'))
+                <div class="alert alert-danger">
+                    <ul>
+                        <li>{{session('error')}}</li>
+                    </ul>
+                </div>
+            @endif
             <form action="/login" method="POST">
                 @csrf
                 <h1 class="h3 mb-3 fw-normal">Please sign in</h1>

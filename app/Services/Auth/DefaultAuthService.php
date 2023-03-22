@@ -3,8 +3,11 @@
 
 namespace App\Services\Auth;
 
+use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\RegistrationRequest;
+use App\Http\Requests\RestoreRequest;
 use App\Mail\mailgunMail;
+use App\Models\GuidUser;
 use App\Models\User;
 use Database\Seeders\UserSeeder;
 use Illuminate\Support\Facades\Auth;
@@ -13,6 +16,16 @@ use Mailgun\Mailgun;
 
 class DefaultAuthService
 {
+
+    public function __construct(public GuidLinkService $guidLinkService)
+    {
+    }
+
+    private function authUserLogin($user)
+    {
+        Auth::login($user);
+        return redirect(route('list'));
+    }
 
     public function login($credentials)
     {
@@ -29,9 +42,8 @@ class DefaultAuthService
     {
         $userRequest = $request->only('name', 'email', 'password');
         $user = (new  UserService())->create(...$userRequest);
-        Auth::login($user);
 
-        return redirect(route('list'));
+        return $this->authUserLogin($user);
     }
 
     public function logout()
@@ -42,38 +54,73 @@ class DefaultAuthService
         return redirect(route('login'));
     }
 
-    public function restore($request)
+    public function sendGuidMail($email, $guid)
     {
-        //https://documentation.mailgun.com/en/latest/quickstart-sending.html#send-via-smtp
-        //password Nbotyrj123
-        //https://github.com/mailgun/mailgun-php
-        $email = $request['email'];
-        dd(env('MAILGUN_DOMAIN'), env('MAILGUN_SECRET'));
-        Mail::to('artemwbtv@gmail.com')->send(new MailgunMail());
 
-# Include the Autoloader (see "Libraries" for install instructions)
+//        //https://documentation.mailgun.com/en/latest/quickstart-sending.html#send-via-smtp
+//        //password Nbotyrj123
+//        //https://github.com/mailgun/mailgun-php
+//        $email = $request['email'];
+////        dd(env('MAILGUN_DOMAIN'), env('MAILGUN_SECRET'));
+//        Mail::to($email)->send(new MailgunMail());
+//
+//# Include the Autoloader (see "Libraries" for install instructions)
+//
+//
+//        $domain = "sandbox6edfccaf984744b4bb00ca5ca35d6942.mailgun.org";
+//        $kay = 'b4cc2ffa1becdeb1d6e51a6e7920b0b9-30344472-bce4be7f';
+//
+//
+//        $mgClient = Mailgun::create($kay);
+//
+//        $mgClient->messages()->send('example.com', [
+//            'from' => 'bob@example.com',
+//            'to' => 'artemwbtv@gmail.com',
+//            'subject' => 'The PHP SDK is awesome!',
+//            'text' => 'It is so simple to send a message.'
+//        ]);
+//# Issue the call to the client.
+//        $result = $mgClient->domains()->updateWebScheme($domain, 'https');
+//
+//        print_r($result);
+//        dd($result);
+//        dd('success');
 
+    }
 
-        $domain = "sandbox6edfccaf984744b4bb00ca5ca35d6942.mailgun.org";
-        $kay = 'b4cc2ffa1becdeb1d6e51a6e7920b0b9-30344472-bce4be7f';
+    public function restore(RestoreRequest $request)
+    {
+        $email = $request->email;
+        $user = User::where('email', $email)->first();
 
+        if ($user != null) {
+            $guid = $this->guidLinkService->createGuid($user);
+            $this->sendGuidMail($email, $guid);
+        }
 
-        $mgClient = Mailgun::create($kay);
+        return redirect(route('login'))->with('message', 'Check your mail');
+    }
 
-        $mgClient->messages()->send('example.com', [
-            'from' => 'bob@example.com',
-            'to' => 'artemwbtv@gmail.com',
-            'subject' => 'The PHP SDK is awesome!',
-            'text' => 'It is so simple to send a message.'
-        ]);
-# Issue the call to the client.
-        $result = $mgClient->domains()->updateWebScheme($domain, 'https');
+    public function restoreByGuid($guid)
+    {
+        if ($user = $this->guidLinkService->checkGuid($guid)) {
 
-        print_r($result);
-        dd($result);
-        dd('success');
+            return view('pages.auth.changePassword', ['user' => $user]);
+        }
 
+        return redirect(route('login'))->with('error', 'link is not active');
+    }
 
+    public function changePassword(ChangePasswordRequest $request)
+    {
+        $userId = $request->id;
+        $password = $request->password;
+        $user = User::find($userId);
+        $user->setPasswordAttribute($password);
+        $user->update();
+        (new GuidLinkService())->deactivationGuidUser($user);
+
+        return $this->authUserLogin($user);
     }
 
 

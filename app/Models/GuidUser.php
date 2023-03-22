@@ -7,16 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * Class Posts
+ * Class GuidUser
  * @package App\Models
  * @property integer id
- * @property  string title
- * @property string description
  * @property integer userId
+ * @property string guid
+ * @property bool active
  */
-class Posts extends Model
+class GuidUser extends Model
 {
     use HasFactory;
+
+    public $table = 'guidUsers';
 
     public function user(): HasOne
     {

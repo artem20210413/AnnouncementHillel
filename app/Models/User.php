@@ -21,15 +21,14 @@ class User extends Authenticatable
 
     protected $table = 'user';
 
-    public function posts(): HasMany
-    {
-        return $this->hasMany(Posts::class, 'userId', 'id');
-    }
-
     protected $hidden = [
         'password'
     ];
 
+    public function posts(): HasMany
+    {
+        return $this->hasMany(Posts::class, 'userId', 'id');
+    }
 
     public function setPasswordAttribute($password)
     {
