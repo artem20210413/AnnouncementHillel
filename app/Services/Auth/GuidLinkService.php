@@ -56,7 +56,6 @@ class GuidLinkService
             return null;
         }
 
-
         return $user;
     }
 

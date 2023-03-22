@@ -120,7 +120,8 @@ class DefaultAuthService
         $user->update();
         (new GuidLinkService())->deactivationGuidUser($user);
 
-        return $this->authUserLogin($user);
+        return redirect(route('login'))->with('message', 'Password changed successfully');
+//        return $this->authUserLogin($user);
     }
 
 
