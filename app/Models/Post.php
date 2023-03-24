@@ -7,14 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * Class Posts
+ * Class Post
  * @package App\Models
  * @property integer id
  * @property  string title
  * @property string description
  * @property integer userId
  */
-class Posts extends Model
+class Post extends Model
 {
     use HasFactory;
 

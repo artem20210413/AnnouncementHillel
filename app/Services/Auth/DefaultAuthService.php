@@ -7,12 +7,9 @@ use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\RegistrationRequest;
 use App\Http\Requests\RestoreRequest;
 use App\Mail\mailgunMail;
-use App\Models\GuidUser;
 use App\Models\User;
-use Database\Seeders\UserSeeder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
-use Mailgun\Mailgun;
 
 class DefaultAuthService
 {
@@ -57,13 +54,22 @@ class DefaultAuthService
     public function sendGuidMail($email, $guid)
     {
 
+        Mail::to($email)->send(new MailgunMail());
+
+//        $mgClient = new Mailgun(env('MAILGUN_SECRET'));
+//        $domain = env("MAILGUN_DOMAIN");
+//# Make the call to the client.
+//        $result = $mgClient->sendMessage($domain, array(
+//            'from'	=> 'Excited User <mailgun@YOUR_DOMAIN_NAME>',
+//            'to'	=> 'Baz <YOU@YOUR_DOMAIN_NAME>',
+//            'subject' => 'Hello',
+//            'text'	=> 'Testing some Mailgun awesomness!'
+//        ));
+
+
 //        //https://documentation.mailgun.com/en/latest/quickstart-sending.html#send-via-smtp
 //        //password Nbotyrj123
 //        //https://github.com/mailgun/mailgun-php
-//        $email = $request['email'];
-////        dd(env('MAILGUN_DOMAIN'), env('MAILGUN_SECRET'));
-//        Mail::to($email)->send(new MailgunMail());
-//
 //# Include the Autoloader (see "Libraries" for install instructions)
 //
 //

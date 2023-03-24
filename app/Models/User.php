@@ -27,7 +27,7 @@ class User extends Authenticatable
 
     public function posts(): HasMany
     {
-        return $this->hasMany(Posts::class, 'userId', 'id');
+        return $this->hasMany(Post::class, 'userId', 'id');
     }
 
     public function setPasswordAttribute($password)

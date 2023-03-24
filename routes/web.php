@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Post\PostController;
+use App\Policies\PostPolicy;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::get('/', [PostController::class, 'list'])->name('list');
+Route::get('/{post}/show', [PostController::class, 'show']);
 
 Route::group(['middleware' => 'guest'], function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -29,4 +31,10 @@ Route::group(['middleware' => 'guest'], function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/edit/{post}', [PostController::class, 'edit']);
+    Route::get('/edit', [PostController::class, 'create']);
+
+    Route::post('/save', [PostController::class, 'save']);//->can('show', PostPolicy::class);//->middleware('can:isShow,post');
+    Route::delete('/delete/{post}', [PostController::class, 'delete']);
+
 });
