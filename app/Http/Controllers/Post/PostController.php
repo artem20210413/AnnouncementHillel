@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Post;
 
+use App\Facades\MailFacade;
 use App\Http\Requests\PostRequest;
 use App\Models\Post;
 use App\Services\Ad\PostsService;

@@ -16,9 +16,9 @@ class MailgunMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct(public string $guid)
     {
-        //
+
     }
 
     /**
@@ -27,7 +27,7 @@ class MailgunMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Mailgun Mail',
+            subject: 'Mailgun MailInterface',
         );
     }
 
@@ -48,6 +48,7 @@ class MailgunMail extends Mailable
      */
     public function attachments(): array
     {
+//        return ['guid' => $this->guid];
         return [];
     }
 }

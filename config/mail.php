@@ -104,7 +104,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Markdown Mail Settings
+    | Markdown MailInterface Settings
     |--------------------------------------------------------------------------
     |
     | If you are using Markdown based emails rendering, you may configure your
